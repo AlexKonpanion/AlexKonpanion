@@ -1,0 +1,38 @@
+# Reading movements from text files and providing the motorcontroller with
+# a sequence of points to create animations for the motors of the Konpanion V1
+# Author: Swen Gaudl
+# License: Private
+import time
+import json
+
+class MovementReader:
+
+	def __init__(self):
+	  import os 
+	  # import logging
+	  # logging.basicConfig(level=logging.DEBUG)
+	  self.movement_files = []
+	  self.current_file = 0
+	  self.current_sequence = []
+	  for file in os.listdir("./movs"):
+	    if file.endswith(".json"):
+	      self.movement_files.append(os.path.join("./movs",file))
+
+
+	def get_next_movement(self):
+	  if len(self.movement_files) < 1:
+	    return {}
+	  if self.current_file < len(self.movement_files):
+	    file=open(self.movement_files[self.current_file],"r")
+	    lines = file.readlines()
+	    move = ""
+	    for line in lines:
+	      move += line
+	    move = json.loads(move)
+	    self.current_sequence = move
+	    self.current_file +=1
+	  else:
+	    self.current_file = 0
+	    return self.get_next_movement()
+
+	  return self.current_sequence
