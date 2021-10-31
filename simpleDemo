@@ -1,5 +1,6 @@
 # import system libraries
 import time
+from numpy import arange
 # import Adafruit Blinka
 from board import SCL, SDA
 import busio
@@ -15,61 +16,61 @@ i2c = busio.I2C(SCL, SDA)
 
 # Create a simple PCA9685 class instance.
 pca = PCA9685(i2c)
-# You can optionally provide a finer tuned reference clock speed to improve the accuracy of the
-# timing pulses. This calibration will be specific to each board and its environment. See the
+# You can optionally provide a finer tuned reference clock speed to improve the$
+# timing pulses. This calibration will be specific to each board and its enviro$
 # calibration.py example in the PCA9685 driver.
 # pca = PCA9685(i2c, reference_clock_speed=25630710)
 pca.frequency = 60
 
-#Open all channels on the PCA
-kit=ServoKit(channels=16)
+# Open all channels on the PCA
+kit = ServoKit(channels=16)
 
-#define tilt or pan for each servos
-tilt=125
-#pan=0
-#kit.servo[0].angle=pan
-#kit.servo[1].angle=pan
-#kit.servo[2].angle=pan
-#kit.servo[3].angle=pan
-kit.servo[0].angle = - tilt
-kit.servo[1].angle = tilt
-kit.servo[2].angle = tilt
-kit.servo[3].angle = tilt
+# define tilt or pan for each servos
+# tilt=90
 
-#basic movements
-#L1
-for i in range(120):
+# pan=0
+# kit.servo[0].angle=pan
+# kit.servo[1].angle=pan
+# kit.servo[2].angle=pan
+# kit.servo[3].angle=pan
+# kit.servo[0].angle=tilt
+# kit.servo[1].angle=tilt
+# kit.servo[2].angle=tilt
+# kit.servo[3].angle=tilt
+
+# basic movements
+step = 1
+for i in arange(90, 130,step):
     kit.servo[0].angle = i
-    time.sleep(.01)
-#R1
-for j in range(90,140,-1):
-    kit.servo[1].angle = j
-    time.sleep(.06)
-#L2 and R2 
-for i in range(90,50,-1):
-    kit.servo[2].angle = i
-    kit.servo[3].angle = i
-    time.sleep(.06)
-#L1    
-for i in range(90, 140,-1):
+    time.sleep(0.06*step)
+
+for k in arange(90, 50, -step):
+    kit.servo[1].angle = k
+    kit.servo[2].angle = k
+    kit.servo[3].angle = k
+    time.sleep(0.06*step)
+
+for i in arange(130, 50, -step):
     kit.servo[0].angle = i
-#R1
-for j in range(90, 140):
-    kit.servo[1].angle= j
-    time.sleep(.06)#
-#L2 and R2 
-for i in range(90,50):
-    kit.servo[2].angle=i
-    kit.servo[3].angle=i
-    time.sleep(.06)
-    continue
-#L1
-for i in range(90, 140):
+    time.sleep(.06*step)
+
+for k in arange(50, 130,step):
+    kit.servo[1].angle = k
+    kit.servo[2].angle = k
+    kit.servo[3].angle = k
+    time.sleep(.06*step)
+
+    #movement back to centre
+for i in arange(50, 90,step):
     kit.servo[0].angle = i
-#R1
-for j in range(90, 140, -1):
-    kit.servo[1].angle = j
-    time.sleep(.06)
+    time.sleep(0.06*step)
+
+for k in arange(130, 90, -step):
+    kit.servo[1].angle = k
+    kit.servo[2].angle = k
+    kit.servo[3].angle = k
+    time.sleep(0.06*step)
+
 
 #T-pose servos at 90
 while True:
@@ -77,3 +78,5 @@ while True:
     kit.servo[1].angle = 90
     kit.servo[2].angle = 90
     kit.servo[3].angle = 90
+
+#pca.deinit()
