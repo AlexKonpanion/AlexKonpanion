@@ -1,4 +1,5 @@
 # import system libraries
+#============================================================
 import time
 from numpy import arange
 # import Adafruit Blinka
@@ -9,36 +10,24 @@ from adafruit_motor import servo
 # Import the PCA9685 module. Available in the bundle and here:
 #   https://github.com/adafruit/Adafruit_CircuitPython_PCA9685
 from adafruit_pca9685 import PCA9685
-
+# Import the ServoKit class and use it to control servo motors
+# with the Adafruit 16-chanel servo driver breakout.
 from adafruit_servokit import ServoKit
-
+#============================================================
+# default pin
 i2c = busio.I2C(SCL, SDA)
-
 # Create a simple PCA9685 class instance.
 pca = PCA9685(i2c)
 # You can optionally provide a finer tuned reference clock speed to improve the$
-# timing pulses. This calibration will be specific to each board and its enviro$
+# timing pulses. This calibration will be specific to each board and its environment
 # calibration.py example in the PCA9685 driver.
 # pca = PCA9685(i2c, reference_clock_speed=25630710)
 pca.frequency = 60
-
 # Open all channels on the PCA
 kit = ServoKit(channels=16)
+#============================================================
 
-# define tilt or pan for each servos
-# tilt=90
-
-# pan=0
-# kit.servo[0].angle=pan
-# kit.servo[1].angle=pan
-# kit.servo[2].angle=pan
-# kit.servo[3].angle=pan
-# kit.servo[0].angle=tilt
-# kit.servo[1].angle=tilt
-# kit.servo[2].angle=tilt
-# kit.servo[3].angle=tilt
-
-# basic movements
+# basic demo forward movements
 step = 1
 for i in arange(90, 130,step):
     kit.servo[0].angle = i
@@ -71,12 +60,14 @@ for k in arange(130, 90, -step):
     kit.servo[3].angle = k
     time.sleep(0.06*step)
 
-
-#T-pose servos at 90
+#============================================================
+#T-pose servos at 90 (we should make then slower)
 while True:
     kit.servo[0].angle = 90
     kit.servo[1].angle = 90
     kit.servo[2].angle = 90
     kit.servo[3].angle = 90
 
-#pca.deinit()
+    break
+
+pca.deinit()
